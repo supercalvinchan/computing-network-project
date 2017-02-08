@@ -43,6 +43,7 @@ public class UDPClient {
 
 	public UDPClient() {
 		// TO-DO: Initialise the UDP socket for sending data
+		socket = new UDPSocket(); //DONE
 	}
 
 	private void testLoop(InetAddress serverAddr, int recvPort, int countTo) {
@@ -57,5 +58,10 @@ public class UDPClient {
 		DatagramPacket		pkt;
 
 		// TO-DO: build the datagram packet and send it to the server
+		
+		byte[] data = "Hello Server".getbytes();
+		DatagramPacket packet = new DatagramPacket(data, data.length, host, port);
+		
+		socket.send(packet); //DONE
 	}
 }
