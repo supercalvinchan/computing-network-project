@@ -93,9 +93,13 @@ public class UDPClient {
 
 		// TO-DO: build the datagram packet and send it to the server
 		
-		byte[] data = "Hello Server".getbytes();
-		DatagramPacket packet = new DatagramPacket(data, data.length, host, port);
-		
-		clientsocket.send(packet); //DONE
+		pkt = new DatagramPacket(data, data.length, destAddr, destPort);
+		try{
+			sendSoc.send(pkt);
+		}
+		catch (TException b) {
+			System.out.println("Error transmitting packet over network.");
+			System.exit(-1);
+		}
 	}
 }
