@@ -26,7 +26,15 @@ public class UDPServer {
 
 		// TO-DO: Receive the messages and process them by calling processMessage(...).
 		//        Use a timeout (e.g. 30 secs) to ensure the program doesn't block forever
-
+		
+		while(true){
+			DatagramPacket receivePacket = new DatagramPacket(data, data.length, host, port);
+			
+			serverSocket.receive(receivePacket);
+			
+			serverSocket.setSoTimeout(30000);
+		}
+		
 	}
 
 	public void processMessage(String data) {
@@ -47,7 +55,7 @@ public class UDPServer {
 
 	public UDPServer(int rp) {
 		// TO-DO: Initialise UDP socket for receiving data
-
+		DatagramSocket serverSocket = new DatagramSocket(port);
 		// Done Initialisation
 		System.out.println("UDPServer ready");
 	}
