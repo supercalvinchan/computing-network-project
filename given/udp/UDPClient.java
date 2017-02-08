@@ -43,7 +43,7 @@ public class UDPClient {
 
 	public UDPClient() {
 		// TO-DO: Initialise the UDP socket for sending data
-		socket = new UDPSocket(); //DONE
+		socket = new DatagramSocket(); //DONE
 	}
 
 	private void testLoop(InetAddress serverAddr, int recvPort, int countTo) {
