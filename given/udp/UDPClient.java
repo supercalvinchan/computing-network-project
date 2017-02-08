@@ -75,8 +75,8 @@ public class UDPClient {
 				os.flush();
 			} 
 			
-			catch (IOException e) {
-				System.out.println("Error serializing object for transmition.");
+			catch (SException b) {
+				System.out.println("Error serializing object for transmission.");
 				System.exit(-1);
 			}
 		
@@ -97,7 +97,7 @@ public class UDPClient {
 		try{
 			sendSoc.send(pkt);
 		}
-		catch (TException b) {
+		catch (TException c) {
 			System.out.println("Error transmitting packet over network.");
 			System.exit(-1);
 		}
