@@ -39,17 +39,51 @@ public class UDPClient {
 
 
 		// TO-DO: Construct UDP client class and try to send messages
+		System.out.println("Constructing UDP Client...");
+		UDPClient client = new UDPClient();
+		System.out.println("Sending Messages");
+		client.testLoop(serverAddr, recvPort, countTo);
 	}
 
 	public UDPClient() {
 		// TO-DO: Initialise the UDP socket for sending data
-		socket = new DatagramSocket(); //DONE
+		try{ 
+			sendSoc = new DatagramSocket(); 
+		   }
+		catch (socketException a) {
+			System.out.println("Error initialising socket.");
+		}
 	}
 
 	private void testLoop(InetAddress serverAddr, int recvPort, int countTo) {
 		int				tries = 0;
 
 		// TO-DO: Send the messages to the server
+		
+		MessageInfo m;
+		ByteArrayOutputStream byteStream;
+		ObjectOutputStream os;
+		
+		for(int i=0; i<countTo; i++){
+			m = new MessageInfo(countTo,i);
+			
+			byteStream = new ByteArrayOutputStream(5000);
+			try{
+				os = new ObjectOutputStream(new BufferedOutputStream(byteStream));
+				os.flush();
+				os.writeObject(m);
+				os.flush();
+			} 
+			
+			catch (IOException e) {
+				System.out.println("Error serializing object for transmition.");
+				System.exit(-1);
+			}
+		
+			byte[] sendBuf = byteStream.toByteArray();    
+			send(sendBuf, serverAddr, recvPort);
+		}
+			
 	}
 
 	private void send(String payload, InetAddress destAddr, int destPort) {
@@ -62,6 +96,6 @@ public class UDPClient {
 		byte[] data = "Hello Server".getbytes();
 		DatagramPacket packet = new DatagramPacket(data, data.length, host, port);
 		
-		socket.send(packet); //DONE
+		clientsocket.send(packet); //DONE
 	}
 }
