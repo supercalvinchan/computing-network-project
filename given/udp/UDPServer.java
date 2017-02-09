@@ -27,7 +27,7 @@ public class UDPServer {
 		// TO-DO: Receive the messages and process them by calling processMessage(...).
 		//        Use a timeout (e.g. 30 secs) to ensure the program doesn't block forever
 		
-		System.out.println("Ready to receive messages...");
+		System.out.println("Ready to recieve messages...");
 		
 		while(!close){
 			
@@ -40,7 +40,7 @@ public class UDPServer {
 				recvSoc.setSoTimeout(30000);
 				recvSoc.receive(pac);
 			}
-			catch (IOException d){
+			catch (IOException e){
 				System.out.println("Error IO exception receiving packet.");
 				System.out.println("Could be due to timeout.");
 				System.out.println("Now closing server...");
@@ -66,13 +66,12 @@ public class UDPServer {
 			msg = (MessageInfo) is.readObject();	
 			is.close();
 		} 
-		catch (ClassNotFoundException e) {
-			System.out.println("Error: Could not find class match for transmitted message.");
-		} 
-		catch (IOException d) {
+		
+		catch (IOException e) {
 			System.out.println("Error: IO exception creating ObjectInputStream.");
 		}
-
+		// try to implement class not found
+		
 		// TO-DO: On receipt of first message, initialise the receive buffer
 		
 		if(receivedMessages==null){
@@ -142,7 +141,7 @@ public class UDPServer {
 		UDPServer udpsrv = new UDPServer(recvPort);
 		try {
 			udpsrv.run();
-		} catch (SocketTimeoutException f) {}
+		} catch (SocketTimeoutException e) {}
 		
 	}
 
