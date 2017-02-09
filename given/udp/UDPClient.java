@@ -6,6 +6,8 @@ package udp;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.io.BufferedOutputStream;
+import java.io.ByteArraryOutputStream;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -50,7 +52,7 @@ public class UDPClient {
 		try{ 
 			sendSoc = new DatagramSocket(); 
 		   }
-		catch (socketException a) {
+		catch (socketException e) {
 			System.out.println("Error initialising socket.");
 		}
 	}
@@ -75,7 +77,7 @@ public class UDPClient {
 				os.flush();
 			} 
 			
-			catch (SException b) {
+			catch (IOException e) {
 				System.out.println("Error serializing object for transmission.");
 				System.exit(-1);
 			}
@@ -97,8 +99,8 @@ public class UDPClient {
 		try{
 			sendSoc.send(pkt);
 		}
-		catch (TException c) {
-			System.out.println("Error transmitting packet over network.");
+		catch (IOException e) {
+			System.out.println("Error in packet transmission over network.");
 			System.exit(-1);
 		}
 	}
