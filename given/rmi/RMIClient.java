@@ -46,7 +46,12 @@ public class RMIClient {
 
 
               // TO-DO: Attempt to send messages the specified number of times
-
+  for (int i = 0; i < countTo; i++){
+            	        MessageInfo message = new MessageInfo(countTo, i);
+            	        server.receiveMessage(message);
+			                
+                        System.out.println(countTo + " Message");
+                        System.exit(0)
 
 
 
