@@ -2,7 +2,7 @@
  * Created on 01-Mar-2016
  */
 package rmi;
-package client;
+
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -10,7 +10,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.math.BigDecimal;
-import compute.Compute;
+
 
 import common.MessageInfo;
 
@@ -24,7 +24,7 @@ public class RMIClient {
 		if (args.length < 2)
                 {
 	         System.out.println("Needs 2 arguments: ServerHostName/IPAddress, TotalMessageCount");
-		 System.out.printIn("TotalMessageCount, /IPAddress");	
+		
 	         System.exit(-1);
 		}
 
@@ -39,19 +39,18 @@ public class RMIClient {
 
                  // TO-DO: Bind to RMIServer
                  try{
-                     String name = "RMIServerI";
                      Registry registry = LocateRegistry.getRegistry(args[0]);
-                     RMIServerI rmiserver = (RMIServerI) registry.lookup(name);                      
+                     iRMIServer = (RMIServerI) registry.lookup(urlServer);                      
 
 
 
               // TO-DO: Attempt to send messages the specified number of times
                  for (int i = 0; i < numMessages; i++){
             	        MessageInfo message = new MessageInfo(numMessages, i);
-            	        server.receiveMessage(message);
+            	        iRMIServer.receiveMessage(message);
 			                
                         System.out.println(numMessages + " Message");
-                        System.exit(0)}
+                        System.exit(0);}
 		  }catch (Exception e){
                    System.err.println("Fail");
                    e.printStackTrace();

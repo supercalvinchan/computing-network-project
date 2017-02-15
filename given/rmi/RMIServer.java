@@ -18,34 +18,65 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 	private int[] receivedMessages;
 
 	public RMIServer() throws RemoteException {
-	}
+	super();
+                 }
 
 	public void receiveMessage(MessageInfo msg) throws RemoteException {
 
 		// TO-DO: On receipt of first message, initialise the receive buffer
-
-		// TO-DO: Log receipt of the message
-
+                    if (receivedMessages == null) 
+                       {
+			totalMessages = msg.totalMessages;
+                        receivedMessages = new int[msg.totalMessages];
+		        }
+                // TO-DO: Log receipt of the message
+                   receivedMessages[msg.messageNum] = 1;
 		// TO-DO: If this is the last expected message, then identify
 		//        any missing messages
 
-	}
+	           if(msg.messageNum == totalMessages - 1)
+                   {
+                       System.out.println("last expected message, then id any missing messages");
+                   }
+}
 
 
-	public static void main(String[] args) {
-
-		RMIServer rmis = null;
-
-		// TO-DO: Initialise Security Manager
-
+            public static void main(String[] args) {
+             // TO-DO: Initialise Security Manager
+                 if(System.getSecurityManager() == null)
+                {
+                    System.setSecurityManager(new SecurityManager()); 
+                }
 		// TO-DO: Instantiate the server class
-
+               
 		// TO-DO: Bind to RMI registry
-
+                 try{
+               RMIServer server = new RMIServer();
+               rebindServer("RMIServer", server);       
+                 }catch(RemoteException e)
+              {
+                
+                e.printStackTrace();
+                System.exit(-1);
+             }
 	}
 
 	protected static void rebindServer(String serverURL, RMIServer server) {
+         try{
+                LocateRegistry.createRegistry(1099);
+                       Naming.rebind(serverURL,server);
 
+           }catch(RemoteException e)
+              {
+                System.out.println("can not bind becasue of initializing");
+                e.printStackTrace();
+                System.exit(-1);
+             }catch(MalformedURLException e)
+              {
+                System.out.println("can not bind because of malformed URL");
+                e.printStackTrace();
+                System.exit(-1);
+             }
 		// TO-DO:
 		// Start / find the registry (hint use LocateRegistry.createRegistry(...)
 		// If we *know* the registry is running we could skip this (eg run rmiregistry in the start script)
