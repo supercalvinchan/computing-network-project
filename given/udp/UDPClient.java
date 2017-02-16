@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.io.BufferedOutputStream;
-import java.io.ByteArraryOutputStream;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -20,7 +19,7 @@ public class UDPClient {
 
 	public static void main(String[] args) {
 		InetAddress	serverAddr = null;
-		int			recvPort;
+		int	      recvPort;
 		int 		countTo;
 		String 		message;
 
@@ -52,50 +51,39 @@ public class UDPClient {
 		try{ 
 			sendSoc = new DatagramSocket(); 
 		   }
-		catch (socketException e) {
+		catch (SocketException e) {
 			System.out.println("Error initialising socket.");
-		}
+		        System.exit(-1);
+            }
 	}
 
-	private void testLoop(InetAddress serverAddr, int recvPort, int countTo) {
-		int				tries = 0;
-
-		// TO-DO: Send the messages to the server
+	 private void testLoop(InetAddress serverAddr, int recvPort, int countTo) {
+		
+               // TO-DO: Send the messages to the server
 		
 		MessageInfo m;
-		ByteArrayOutputStream byteStream;
-		ObjectOutputStream os;
 		
-		for(int i=0; i<countTo; i++){
-			m = new MessageInfo(countTo,i);
+		for(int i=0; i<countTo; i++)
+                 {
+	          m = new MessageInfo(countTo,i);
+		  this.send(m.toString(), serverAddr, recvPort);
+	         }
 			
-			byteStream = new ByteArrayOutputStream(5000);
-			try{
-				os = new ObjectOutputStream(new BufferedOutputStream(byteStream));
-				os.flush();
-				os.writeObject(m);
-				os.flush();
-			} 
-			
-			catch (IOException e) {
-				System.out.println("Error serializing object for transmission.");
-				System.exit(-1);
-			}
-		
-			byte[] sendBuf = byteStream.toByteArray();    
-			send(sendBuf, serverAddr, recvPort);
-		}
-			
-	}
+	
 
-	private void send(String payload, InetAddress destAddr, int destPort) {
+         }
+
+	
+        private void send(String payload, InetAddress destAddr, int destPort) {
 		int				payloadSize;
 		byte[]				pktData;
 		DatagramPacket		pkt;
 
 		// TO-DO: build the datagram packet and send it to the server
-		
-		pkt = new DatagramPacket(data, data.length, destAddr, destPort);
+		pktData = payload.getBytes();
+                payloadSize = pktData.length;            
+
+		pkt = new DatagramPacket(pktData, payloadSize, destAddr, destPort);
 		try{
 			sendSoc.send(pkt);
 		}
