@@ -38,7 +38,7 @@ public class UDPServer {
 
 			try{
 				//        Use a timeout (e.g. 30 secs) to ensure the program doesn't block forever
-                                recvSoc.setSoTimeout(30000);
+        recvSoc.setSoTimeout(10000);
 				recvSoc.receive(pac);
 						String d = new String (pac.getData()).trim();
 						  processMessage(d);
