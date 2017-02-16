@@ -17,27 +17,28 @@ public class UDPServer {
 	private DatagramSocket recvSoc;
 	private int totalMessages = -1;
 	private int[] receivedMessages;
-	private boolean close;
+	private boolean checkofreceived;
 
 	private void run() {
-		int				pacSize;
-		byte[]			pacData;
-		DatagramPacket 	pac;
-
+		int	pacSize;//fine
+		byte[]	pacData;//fine
+		DatagramPacket 	pac;//fine
+                
 		// TO-DO: Receive the messages and process them by calling processMessage(...).
 		//        Use a timeout (e.g. 30 secs) to ensure the program doesn't block forever
 		
 		System.out.println("Ready to recieve messages...");
-		
+		boolean close = false;
 		while(!close){
 			
 			pacSize = 5000;
 			pacData = new byte[5000];
-			
+		// setup package	
 			pac = new DatagramPacket(pacData, pacSize);
 			
 			try{
-				recvSoc.setSoTimeout(30000);
+				//        Use a timeout (e.g. 30 secs) to ensure the program doesn't block forever
+                                recvSoc.setSoTimeout(30000);
 				recvSoc.receive(pac);
 			}
 			catch (IOException e){
@@ -46,28 +47,28 @@ public class UDPServer {
 				System.out.println("Now closing server...");
 				System.exit(-1);
 			}
-			
-			processMessage(pac.getData());
+			String d = pac.toString();
+                             processMessage(d);
 		}
 		
 	}
 
-	public void processMessage(String data) {
+	
+              public void processMessage(String data) {
 
 		MessageInfo msg = null;
 
 		// TO-DO: Use the data to construct a new MessageInfo object
 		
-		ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
-		ObjectInputStream is;
+		
 		
 		try {
-			is = new ObjectInputStream(new BufferedInputStream(byteStream));
-			msg = (MessageInfo) is.readObject();	
-			is.close();
+			
+			msg = new MessageInfo(data);	
+			
 		} 
 		
-		catch (IOException e) {
+		catch (Exception e) {
 			System.out.println("Error: IO exception creating ObjectInputStream.");
 		}
 		// try to implement class not found
@@ -75,7 +76,7 @@ public class UDPServer {
 		// TO-DO: On receipt of first message, initialise the receive buffer
 		
 		if(receivedMessages==null){
-			totalMessages = msg.totalMEssages;
+			totalMessages = msg.totalMessages;
 			receivedMessages = new int[totalMessages];
 		}
 
@@ -87,7 +88,7 @@ public class UDPServer {
 		//        any missing messages
 		
 		if (msg.messageNum + 1 == msg.totalMessages) {
-			close = true;
+			boolean close = true;
 			
 			String s = "Lost packet numbers: ";
 			int count = 0;
@@ -100,11 +101,9 @@ public class UDPServer {
 			
 			if (count == 0) s = s + "None";
 			
-			System.out.println("Messages processed");
 			System.out.println("Of " + msg.totalMessages + ", " + (msg.totalMessages - count) + " received successfully");
 			System.out.println("Of " + msg.totalMessages + ", " + count + " failed");
-			System.out.println(s);
-			System.out.println("Test finished.");
+			
 		}
 
 	}
@@ -113,17 +112,17 @@ public class UDPServer {
 	public UDPServer(int rp) {
 		// TO-DO: Initialise UDP socket for receiving data
 		try {
-			port = rp;
-			socket = new DatagramSocket(port);
+			
+			recvSoc = new DatagramSocket(rp);
 		}
 		catch (SocketException e) {
-			System.out.println("Error: Could not create socket on port " + port);
+			System.out.println("Error: Could not create socket on port " + rp);
 			System.exit(-1);
 		}
 		
 		// Make it so the server can run.
 		
-		close = false;
+		//close = false;
 	}
 
 	public static void main(String args[]) {
@@ -141,7 +140,7 @@ public class UDPServer {
 		UDPServer udpsrv = new UDPServer(recvPort);
 		try {
 			udpsrv.run();
-		} catch (SocketTimeoutException e) {}
+		} catch (Exception e) {}
 		
 	}
 
