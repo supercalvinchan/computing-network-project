@@ -10,6 +10,10 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 
+import java.rmi.AccessException;
+
+
+
 import common.*;
 
 public class RMIServer extends UnicastRemoteObject implements RMIServerI {
@@ -51,9 +55,9 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
                
 		// TO-DO: Bind to RMI registry
                  try{
-               RMIServer server = new RMIServer();
-               rebindServer("RMIServer", server);       
-                 }catch(RemoteException e)
+               RMIServerI server = new RMIServer();
+               rebindServer("RMIServerI", server);       
+                 }catch(Exception e)
               {
                 
                 e.printStackTrace();
@@ -61,9 +65,9 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
              }
 	}
 
-	protected static void rebindServer(String serverURL, RMIServer server) {
+	protected static void rebindServer(String serverURL, RMIServerI server) {
          try{
-                LocateRegistry.createRegistry(1099);
+                LocateRegistry.createRegistry(2000);
                        Naming.rebind(serverURL,server);
 
            }catch(RemoteException e)

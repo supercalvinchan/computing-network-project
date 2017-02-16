@@ -7,7 +7,6 @@ package rmi;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.math.BigDecimal;
 
@@ -39,7 +38,7 @@ public class RMIClient {
 
                  // TO-DO: Bind to RMIServer
                  try{
-                     Registry registry = LocateRegistry.getRegistry(args[0]);
+                     Registry registry = LocateRegistry.getRegistry(args[0], 2000);
                      iRMIServer = (RMIServerI) registry.lookup(urlServer);                      
 
 
