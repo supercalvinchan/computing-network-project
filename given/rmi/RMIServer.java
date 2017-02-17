@@ -26,10 +26,11 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
                  }
 
 	public void receiveMessage(MessageInfo msg) throws RemoteException {
-
+                 System.out.println("call receive message");
 		// TO-DO: On receipt of first message, initialise the receive buffer
-                    if (receivedMessages == null) 
+                    if (totalMessages == -1) 
                        {
+                         System.out.println("This is the first call");
 			totalMessages = msg.totalMessages;
                         receivedMessages = new int[msg.totalMessages];
 		        }
@@ -40,9 +41,24 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 
 	           if(msg.messageNum == totalMessages - 1)
                    {
-                       System.out.println("last expected message, then id any missing messages");
+                    
+                   String lost = "Lost packet numbers: ";
+			int count = 0;
+			for (int i = 0; i < totalMessages; i++) {
+				if (receivedMessages[i] != 1) {
+					count++;
+					lost = lost + " " + (i+1) + ", ";
+				}
+			}
+			
+			if (count == 0) lost = lost + "None";
+			System.out.println("Number of Messages received: " + (totalMessages - count));
+			System.out.println("Number of Messages sent: " + totalMessages);
+			System.out.println("Number of Messages lost      : " + count);
+			
+                        System.exit(0);
                    }
-}
+                }
 
 
             public static void main(String[] args) {
@@ -56,7 +72,8 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 		// TO-DO: Bind to RMI registry
                  try{
                RMIServerI server = new RMIServer();
-               rebindServer("RMIServerI", server);       
+               rebindServer("rmi://86.187.161.107:2000/RMIServer", server);   
+                   
                  }catch(Exception e)
               {
                 
